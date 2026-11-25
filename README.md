@@ -6,7 +6,7 @@ The learned classifier has the factorization W_i = B H_i. Cross-moments initiali
 
 ## Install
 
-Requires Python 3.11 or newer.
+Requires Python 3.9 or newer. The server setup with Python 3.9 can use its existing environment.
 
 ```bash
 git clone https://github.com/LeoToso/underparameterized_rep_learning.git
