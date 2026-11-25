@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 # Copyright (c) Meta Platforms, Inc. and affiliates.
 #
 # This source code is licensed under the Apache License, Version 2.0
