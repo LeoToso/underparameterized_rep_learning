@@ -1,0 +1,122 @@
+[
+  {
+    "epoch": 1,
+    "pooled_validation_accuracy": 0.8042204976081848
+  },
+  {
+    "epoch": 2,
+    "pooled_validation_accuracy": 0.767363429069519
+  },
+  {
+    "epoch": 3,
+    "pooled_validation_accuracy": 0.7883104681968689
+  },
+  {
+    "epoch": 4,
+    "pooled_validation_accuracy": 0.8343984484672546
+  },
+  {
+    "epoch": 5,
+    "pooled_validation_accuracy": 0.7927262187004089
+  },
+  {
+    "epoch": 6,
+    "pooled_validation_accuracy": 0.8209292888641357
+  },
+  {
+    "epoch": 7,
+    "pooled_validation_accuracy": 0.856654703617096
+  },
+  {
+    "epoch": 8,
+    "pooled_validation_accuracy": 0.837260901927948
+  },
+  {
+    "epoch": 9,
+    "pooled_validation_accuracy": 0.655372142791748
+  },
+  {
+    "epoch": 10,
+    "pooled_validation_accuracy": 0.8162251114845276
+  },
+  {
+    "epoch": 11,
+    "pooled_validation_accuracy": 0.7942129373550415
+  },
+  {
+    "epoch": 12,
+    "pooled_validation_accuracy": 0.6849287748336792
+  },
+  {
+    "epoch": 13,
+    "pooled_validation_accuracy": 0.8286513090133667
+  },
+  {
+    "epoch": 14,
+    "pooled_validation_accuracy": 0.8541472554206848
+  },
+  {
+    "epoch": 15,
+    "pooled_validation_accuracy": 0.8464696407318115
+  },
+  {
+    "epoch": 16,
+    "pooled_validation_accuracy": 0.8787333965301514
+  },
+  {
+    "epoch": 17,
+    "pooled_validation_accuracy": 0.8615807890892029
+  },
+  {
+    "epoch": 18,
+    "pooled_validation_accuracy": 0.8767807483673096
+  },
+  {
+    "epoch": 19,
+    "pooled_validation_accuracy": 0.874006986618042
+  },
+  {
+    "epoch": 20,
+    "pooled_validation_accuracy": 0.8683930039405823
+  },
+  {
+    "epoch": 21,
+    "pooled_validation_accuracy": 0.8687258958816528
+  },
+  {
+    "epoch": 22,
+    "pooled_validation_accuracy": 0.8737185597419739
+  },
+  {
+    "epoch": 23,
+    "pooled_validation_accuracy": 0.8774020075798035
+  },
+  {
+    "epoch": 24,
+    "pooled_validation_accuracy": 0.881729006767273
+  },
+  {
+    "epoch": 25,
+    "pooled_validation_accuracy": 0.8767141699790955
+  },
+  {
+    "epoch": 26,
+    "pooled_validation_accuracy": 0.8827497363090515
+  },
+  {
+    "epoch": 27,
+    "pooled_validation_accuracy": 0.8520392179489136
+  },
+  {
+    "epoch": 28,
+    "pooled_validation_accuracy": 0.882771909236908
+  },
+  {
+    "epoch": 29,
+    "pooled_validation_accuracy": 0.8619136214256287
+  },
+  {
+    "epoch": 30,
+    "pooled_validation_accuracy": 0.8815293312072754
+  }
+]
