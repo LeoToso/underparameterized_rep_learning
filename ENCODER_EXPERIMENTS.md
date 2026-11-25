@@ -167,3 +167,17 @@ Nine numerical checks pass. CPU smoke runs verified the official iBOT checkpoint
 - [DINOv2](https://github.com/facebookresearch/dinov2)
 - [iBOT pretrained backbones](https://github.com/bytedance/ibot#pre-trained-models)
 - [DINOv3 checkpoint access and loading instructions](https://github.com/facebookresearch/dinov3)
+
+## Continue an interrupted sweep
+
+After the previous process has stopped, repeat its command with `--resume`:
+
+```bash
+python -u run_embedding_comparison.py \
+  --encoders dinov2 ibot \
+  --device cuda \
+  --output embedding-runs/public \
+  --resume
+```
+
+Completed seed/dimension points and their checkpoints are reused. A partially completed point restarts, using cached image embeddings. The saved encoder, data partitions and training settings are checked before continuation. Model files and metrics are written through temporary files so interrupted writes preserve previously completed results. A complete dataset sweep is skipped automatically. The final plot is generated when all requested sweeps are complete.
