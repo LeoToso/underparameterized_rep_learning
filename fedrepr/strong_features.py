@@ -10,6 +10,7 @@ import numpy as np
 
 from .core import evaluate, initialize, orthogonal
 from .data import images
+from .download import checksum
 
 
 class DinoFeatures:
@@ -28,8 +29,7 @@ class DinoFeatures:
         self.model.load_state_dict(
             torch.load(checkpoint, map_location="cpu", weights_only=True)
         )
-        with checkpoint.open("rb") as f:
-            self.checkpoint_hash = hashlib.file_digest(f, "sha256").hexdigest()
+        self.checkpoint_hash = checksum(checkpoint)
         self.cache = cache
         cache.mkdir(parents=True, exist_ok=True)
 
