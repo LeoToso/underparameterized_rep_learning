@@ -7,3 +7,7 @@ runs*/
 vendor/checkpoints/
 *.partial
 .DS_Store
+embedding-runs/
+embedding-cache/
+imagenet-pretrain*/
+external/
