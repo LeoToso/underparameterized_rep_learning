@@ -38,6 +38,9 @@ def main():
     p.add_argument("--batch-size", type=int, default=64)
     p.add_argument("--device", default="auto")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument(
+        "--resume", action="store_true", help="Continue existing matching experiments"
+    )
     args = p.parse_args()
     if not 0 < args.data_fraction <= 1:
         p.error("data-fraction must lie in (0,1]")
@@ -97,30 +100,31 @@ def main():
         for encoder in args.encoders
         for dataset in ("cifar10", "femnist")
     ]
-    if not args.dry_run and any(path.exists() for path in planned):
-        p.error("An experiment directory already exists; choose a fresh --output")
+    if not args.dry_run and not args.resume and any(path.exists() for path in planned):
+        p.error("An experiment directory already exists; add --resume to continue it")
     for dataset in ("cifar10", "femnist"):
         run(["-m", "fedrepr.download", dataset, "--root", data])
     if "imagenet-vit" in args.encoders and checkpoints["imagenet-vit"] is None:
         pretrain = output / "imagenet-pretrain"
-        run(
-            [
-                "-m",
-                "fedrepr.train_imagenet_vit",
-                "--imagenet-root",
-                args.imagenet_root.expanduser().resolve(),
-                "--output",
-                pretrain,
-                "--data-fraction",
-                args.data_fraction,
-                "--epochs",
-                args.imagenet_epochs,
-                "--batch-size",
-                args.batch_size,
-                "--device",
-                args.device,
-            ]
-        )
+        pretrain_command = [
+            "-m",
+            "fedrepr.train_imagenet_vit",
+            "--imagenet-root",
+            args.imagenet_root.expanduser().resolve(),
+            "--output",
+            pretrain,
+            "--data-fraction",
+            args.data_fraction,
+            "--epochs",
+            args.imagenet_epochs,
+            "--batch-size",
+            args.batch_size,
+            "--device",
+            args.device,
+        ]
+        if args.resume and (pretrain / "last.pt").exists():
+            pretrain_command += ["--resume", pretrain / "last.pt"]
+        run(pretrain_command)
         checkpoints["imagenet-vit"] = pretrain / "best.pt"
     for encoder in args.encoders:
         for dataset, clients in (
@@ -159,6 +163,8 @@ def main():
                 command += ["--checkpoint", checkpoints[encoder]]
             if encoder == "dinov3":
                 command += ["--dinov3-repo", args.dinov3_repo.expanduser().resolve()]
+            if args.resume:
+                command.append("--resume")
             run(command)
     run(
         [
