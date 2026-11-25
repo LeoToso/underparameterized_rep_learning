@@ -68,6 +68,25 @@ def prepare_features(raw, feature_dim, return_transform=False):
     return clients
 
 
+def prepare_full_features(raw):
+    """Center and scalar-scale all embedding coordinates using training examples.
+
+    This affine preprocessing retains the encoder's full output dimensionality.
+    """
+    training = np.concatenate([client[0] for client in raw])
+    mean = training.mean(axis=0)
+    scale = max(float(np.sqrt(np.mean((training - mean) ** 2))), 1e-12)
+
+    def transform(features):
+        return (features - mean) / scale
+
+    clients = [
+        Client(transform(x), y, transform(vx), vy, transform(tx), ty)
+        for x, y, vx, vy, tx, ty in raw
+    ]
+    return clients, {"mean": mean, "scale": scale}
+
+
 def split_client(x, labels, classes, rng, cap):
     indices = rng.permutation(len(x))
     nt = max(1, int(0.2 * len(x)))
@@ -95,6 +114,7 @@ def images(
     encoder=None,
     cifar_validation_fraction=0.2,
     raw_transform=None,
+    use_pca=True,
 ):
     rng = np.random.default_rng(seed)
     raw, client_ids = [], []
@@ -243,5 +263,8 @@ def images(
         )
     if raw_transform is not None:
         raw = raw_transform(raw)
-    clients, transform = prepare_features(raw, feature_dim, return_transform=True)
+    if use_pca:
+        clients, transform = prepare_features(raw, feature_dim, return_transform=True)
+    else:
+        clients, transform = prepare_full_features(raw)
     return clients, client_ids, transform
