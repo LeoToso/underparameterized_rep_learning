@@ -1,11 +1,12 @@
 """Train both bottleneck experiments and render the two-panel figure."""
 import argparse
-import hashlib
 import os
 from pathlib import Path
 import subprocess
 import sys
 import urllib.request
+
+from fedrepr.download import checksum
 
 DIMENSIONS = ["2", "4", "6", "8", "10", "16", "24", "32", "40", "48", "56", "64"]
 DINO_SHA256 = "b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9"
@@ -47,15 +48,13 @@ def main():
                 "https://dl.fbaipublicfiles.com/dinov2/dinov2_vits14/dinov2_vits14_pretrain.pth",
                 partial,
             )
-            with partial.open("rb") as handle:
-                digest = hashlib.file_digest(handle, "sha256").hexdigest()
+            digest = checksum(partial)
             if digest != DINO_SHA256:
                 partial.unlink()
                 raise ValueError("Downloaded DINOv2 checkpoint failed SHA-256 verification")
             partial.replace(checkpoint)
-        with checkpoint.open("rb") as handle:
-            if hashlib.file_digest(handle, "sha256").hexdigest() != DINO_SHA256:
-                raise ValueError("DINOv2 checkpoint failed SHA-256 verification")
+        if checksum(checkpoint) != DINO_SHA256:
+            raise ValueError("DINOv2 checkpoint failed SHA-256 verification")
 
     cifar = output / "cifar"
     femnist = output / "femnist"
