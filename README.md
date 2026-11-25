@@ -82,10 +82,21 @@ python -m unittest discover -s tests -v
 python train_and_plot.py --dry-run
 ```
 
-Six numerical checks cover the spectral-tail identity, least-squares equations, population descent, valid moment inputs, reproducibility, and exclusion of held-out examples from preprocessing fitting. The assembled training commands were checked without rerunning the full compute-intensive experiments. Numerical results can vary across software versions and hardware.
+Nine numerical checks cover the spectral-tail identity, least-squares equations, population descent, valid moment inputs, reproducibility, exclusion of held-out examples from preprocessing, preservation of all embedding coordinates, equivalence of the chunked solver, and reproducible ImageNet subset selection. The assembled training commands were checked without rerunning the full compute-intensive experiments. Numerical results can vary across software versions and hardware.
 
 ## Data and upstream code
 
 CIFAR-10 parquet files come from [uoft-cs/cifar10](https://huggingface.co/datasets/uoft-cs/cifar10). Writer-identified FEMNIST comes from [flwrlabs/femnist](https://huggingface.co/datasets/flwrlabs/femnist). Download checksums are recorded in `fedrepr/download.py`.
 
 The vendored encoder implementation is from [DINOv2](https://github.com/facebookresearch/dinov2). Its Apache-2.0 license is retained in the vendor directory.
+
+## Full 384-dimensional encoder comparisons
+
+The new pipeline removes PCA and runs both datasets with frozen DINOv2, iBOT, DINOv3, or a ViT trained from scratch on an adjustable ImageNet fraction (default 30%). It supports CUDA, includes k=384 as the full-dimension reference, and plots pointwise 95% intervals.
+
+See [ENCODER_EXPERIMENTS.md](ENCODER_EXPERIMENTS.md) for setup, checkpoint requirements, ImageNet training, and complete commands.
+
+```bash
+pip install -r requirements-embeddings.txt
+python run_embedding_comparison.py --encoders dinov2 ibot --device cuda --output embedding-runs/public
+```
