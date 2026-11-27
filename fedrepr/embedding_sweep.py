@@ -285,6 +285,9 @@ def main():
                         flush=True,
                     )
                     continue
+                device = resolve_device(args.device)
+                if device.type == "cuda":
+                    torch.cuda.synchronize(device)
                 start = time.monotonic()
                 basis = initialize(shuffled, k, generator, "cross_moments")
                 best = fit_candidates(
@@ -293,10 +296,12 @@ def main():
                     args.rounds,
                     args.learning_rate,
                     args.ridges,
-                    resolve_device(args.device),
+                    device,
                     args.validation_every,
                 )
                 test = evaluate(clients, best["weights"], "test", True)
+                if device.type == "cuda":
+                    torch.cuda.synchronize(device)
                 row = dict(
                     encoder=args.encoder,
                     dataset=args.dataset,
