@@ -13,30 +13,24 @@ import numpy as np
 from scipy.stats import t
 
 
-def summarize(rows, k):
+def summarize(rows, k, field="test_macro", scale=100.0):
     selected = [r for r in rows if int(r["k"]) == k]
     data_seeds = sorted({int(r["data_seed"]) for r in selected})
     if len(data_seeds) > 1:
         # Treat dataset partitions as independent units, averaging nested initializations.
         values = [
-            np.mean(
-                [
-                    float(r["test_macro"])
-                    for r in selected
-                    if int(r["data_seed"]) == seed
-                ]
-            )
+            np.mean([float(r[field]) for r in selected if int(r["data_seed"]) == seed])
             for seed in data_seeds
         ]
         interval_type = (
             "data partitions (initializations averaged within each partition)"
         )
     else:
-        values = [float(r["test_macro"]) for r in selected]
+        values = [float(r[field]) for r in selected]
         interval_type = (
             "initialization conditional on one data partition and encoder checkpoint"
         )
-    values = 100 * np.asarray(values)
+    values = scale * np.asarray(values)
     half = (
         t.ppf(0.975, len(values) - 1) * values.std(ddof=1) / np.sqrt(len(values))
         if len(values) > 1
