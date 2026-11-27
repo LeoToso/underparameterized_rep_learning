@@ -175,6 +175,15 @@ def main():
             *args.encoders,
         ]
     )
+    run(
+        [
+            root / "plot_computation_time.py",
+            "--results",
+            output,
+            "--encoders",
+            *args.encoders,
+        ]
+    )
 
 
 if __name__ == "__main__":
