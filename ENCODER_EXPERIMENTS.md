@@ -181,3 +181,23 @@ python -u run_embedding_comparison.py \
 ```
 
 Completed seed/dimension points and their checkpoints are reused. A partially completed point restarts, using cached image embeddings. The saved encoder, data partitions and training settings are checked before continuation. Model files and metrics are written through temporary files so interrupted writes preserve previously completed results. A complete dataset sweep is skipped automatically. The final plot is generated when all requested sweeps are complete.
+
+## Computation time against representation dimension
+
+Completed runs already contain a `seconds` column, so timing figures can be generated without retraining:
+
+```bash
+python plot_computation_time.py \
+  --results embedding-runs/public \
+  --encoders dinov2 ibot
+```
+
+This writes one two-panel PNG/PDF figure per encoder, with CIFAR and FEMNIST in the columns, plus `figures/computation_time_summary.csv`. Use `--unit minutes` for longer runs. Add `dinov3 imagenet-vit` to the encoder list once those runs are complete. The suite runner also generates these timing figures automatically.
+
+The measured wall time includes cross-moment initialization, sufficient-statistic construction, the complete ridge-candidate fitting sweep, validation and test evaluation for each seed/k point. Embedding extraction, preprocessing and model-file writing occur outside this timer. The ridge search is normally two candidates, each with the configured round budget, even when validation selects an earlier checkpoint.
+
+The full-dimensional k=384 point is marked with a star. It uses a direct ridge fit with zero representation updates, so its cost follows a different computation path. Smaller alternating models may be faster, but the measured curve need not increase monotonically through this shortcut.
+
+Bands use the same pointwise 95% Student t calculation as the accuracy plots. Runtime variability reflects the repetitions on the server and can depend on other workloads. New GPU runs explicitly synchronize CUDA around the timer. Existing recorded times are plotted as collected; GPU-to-CPU transfers during validation already synchronize intermediate results.
+
+These timings measure the centralized simulator's linear adaptation workload. Encoder pretraining and network communication costs are separate from this measurement.
